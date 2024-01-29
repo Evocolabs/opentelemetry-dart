@@ -33,6 +33,3 @@ export 'src/api/trace/trace_id.dart' show TraceId;
 export 'src/api/trace/trace_state.dart' show TraceState;
 export 'src/api/trace/tracer.dart' show Tracer;
 export 'src/api/trace/tracer_provider.dart' show TracerProvider;
-export 'src/api/logs/logger_provider.dart' show LoggerProvider;
-export 'src/api/logs/logger.dart' show Logger;
-export 'src/api/logs/log_record.dart' show LogRecord;

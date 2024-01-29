@@ -1,5 +1,6 @@
 @TestOn('vm')
 import 'package:opentelemetry/api.dart' as api;
+import 'package:opentelemetry/src/experimental_api.dart' as api;
 import 'package:opentelemetry/src/api/logs/log_record.dart';
 import 'package:opentelemetry/src/api/logs/noop/noop_logger_provider.dart';
 import 'package:test/test.dart';
