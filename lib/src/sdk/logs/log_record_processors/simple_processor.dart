@@ -4,18 +4,23 @@ import 'package:opentelemetry/src/sdk/logs/exporters/log_record_exporter.dart';
 import 'package:opentelemetry/src/sdk/logs/log_record_processors/log_record_processor.dart';
 import 'package:opentelemetry/src/sdk/logs/data/read_write_log_record.dart';
 
-class SimpleProcessor implements LogRecordProcessor {
+class SimpleLogRecordProcessor implements LogRecordProcessor {
   final LogRecordExporter exporter;
   bool _shutdown = false;
 
-  SimpleProcessor(this.exporter);
+  SimpleLogRecordProcessor(this.exporter);
 
   @override
   void onEmit(ReadWriteLogRecord record, {SpanContext? spanContext}) {
+    if (_shutdown) {
+      return;
+    }
     if (spanContext != null) {
       record.spanContext = spanContext;
     }
-    exporter.export([ReadableLogRecord.from(record.resource, record.instrumentationScope, record)]);
+    exporter.export([
+      ReadableLogRecord.convert(record)
+    ]);
   }
 
   @override
@@ -24,11 +29,11 @@ class SimpleProcessor implements LogRecordProcessor {
   }
 
   @override
-  void shutDown() {
-    if (_shutdown) {
-      return;
-    }
-    exporter.shutdown();
+  bool shutDown() {
+    if (_shutdown) return false;
+    forceFlush();
+    if (!exporter.shutDown()) return false;
     _shutdown = true;
+    return true;
   }
 }
