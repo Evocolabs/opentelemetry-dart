@@ -6,54 +6,37 @@ enum SeverityText { trace, debug, info, warn, error, fatal, unknown }
 
 // Log Record conforms to the OpenTelemetry specification for Log Data Model
 class LogRecord {
-  final Int64 _timestamp;
-  final Int64 _observedTimestamp;
-  final SpanContext _spanContext;
-  final int _severityNumber;
-  final SeverityText _severityText;
-  final String _body;
-  final List<Attribute> _attributes;
+  Int64 timestamp;
+  Int64 observedTimestamp;
+  SpanContext spanContext;
+  int severityNumber;
+  SeverityText severityText;
+  String body;
+  List<Attribute> attributes;
 
   @protected
   LogRecord(
-      this._timestamp,
-      this._observedTimestamp,
-      this._spanContext,
-      this._severityNumber,
-      this._severityText,
-      this._body,
-      this._attributes);
+      this.timestamp,
+      this.observedTimestamp,
+      this.spanContext,
+      this.severityNumber,
+      this.severityText,
+      this.body,
+      this.attributes);
 
   LogRecord.create(
-      {timestamp,
-      observedTimestamp,
-      spanContext,
-      severityNumber = 0,
-      severityText = SeverityText.unknown,
-      body='',
-      attributes=const []})
-      : _timestamp = timestamp ??
+      {Int64? timestamp,
+      Int64? observedTimestamp,
+      SpanContext? spanContext,
+      this.severityNumber = 0,
+      this.severityText = SeverityText.unknown,
+      this.body='',
+      List<Attribute>? attributes})
+      : timestamp = timestamp ??
             observedTimestamp ??
             Int64(DateTime.now().millisecondsSinceEpoch),
-        _observedTimestamp =
+        observedTimestamp =
             observedTimestamp ?? Int64(DateTime.now().millisecondsSinceEpoch),
-        _spanContext = spanContext ?? SpanContext.invalid(),
-        _severityNumber = severityNumber,
-        _severityText = severityText,
-        _body = body,
-        _attributes = attributes;
-
-  Int64 get timestamp => _timestamp;
-
-  Int64 get observedTimestamp => _observedTimestamp;
-
-  SpanContext get spanContext => _spanContext;
-
-  int get severityNumber => _severityNumber;
-
-  SeverityText get severityText => _severityText;
-
-  String get body => _body;
-
-  List<Attribute> get attributes => _attributes;
+        spanContext = spanContext ?? SpanContext.invalid(),
+        attributes = attributes ?? [];
 }
