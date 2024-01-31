@@ -5,37 +5,66 @@ import 'package:opentelemetry/src/experimental_api.dart' as api;
 import 'package:opentelemetry/src/sdk/logs/log_record_processors/log_record_processor.dart';
 import 'package:opentelemetry/src/sdk/logs/logger.dart';
 
+const int _defaultTimeout = 5000;
+
 class LoggerProvider implements api.LoggerProvider {
   final List<LogRecordProcessor> _logRecordProcessors;
   final Map<String, api.Logger> _loggers = {};
   final sdk.Resource _resource;
-  bool _shutdownCalled = false;
+  bool _shutdown = false;
+  int _timeout;
 
   static const NoopLogger _noopLogger = NoopLogger();
 
-  LoggerProvider({resource, logRecordProcessors = const []})
-      : _logRecordProcessors = logRecordProcessors,
-        _resource = resource ?? sdk.Resource([]);
+  int get timeout => _timeout;
+  set timeout(int timeout) {
+    if (timeout < 0) {
+      throw ArgumentError('timeout cannot be negative');
+    }
+    _timeout = timeout;
+  }
+
+  LoggerProvider(
+      {sdk.Resource? resource,
+      List<LogRecordProcessor>? logRecordProcessors,
+      int timeout = _defaultTimeout})
+      : _logRecordProcessors = logRecordProcessors ?? <LogRecordProcessor>[],
+        _resource = resource ?? sdk.Resource([]),
+        _timeout = timeout;
 
   void add_log_record_processor(LogRecordProcessor logRecordProcessor) {
     _logRecordProcessors.add(logRecordProcessor);
   }
 
-  void shutDown() {
-    //TODO: configure shutdown timeout
-    if (_shutdownCalled) {
-      return;
+  bool shutDown() {
+    if (_shutdown) {
+      return false;
     }
-    for (final processor in _logRecordProcessors) {
-      processor.shutDown();
+    try {
+      for (final processor in _logRecordProcessors) {
+        processor.shutDown();
+      }
+    } catch (e) {
+      return false;
     }
-    _shutdownCalled = true;
+
+    _shutdown = true;
+    return true;
   }
 
-  void forceFlush() {
-    for (final processor in _logRecordProcessors) {
-      processor.forceFlush();
+  bool forceFlush() {
+    if (_shutdown) {
+      return false;
     }
+    try {
+      for (final processor in _logRecordProcessors) {
+        processor.forceFlush();
+      }
+    } catch (e) {
+      return false;
+    }
+
+    return true;
   }
 
   // get a [Logger] identified by a name and an optional version and schemaUrl
@@ -44,7 +73,7 @@ class LoggerProvider implements api.LoggerProvider {
       {String version = '',
       String schemaUrl = '',
       List<Attribute> attributes = const []}) {
-    if (_shutdownCalled) {
+    if (_shutdown) {
       return _noopLogger;
     }
     final key = '$name@$version';
