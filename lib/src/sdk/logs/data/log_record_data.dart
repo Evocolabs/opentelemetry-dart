@@ -5,14 +5,11 @@ import 'package:opentelemetry/src/api/logs/log_record.dart';
 import 'package:opentelemetry/src/experimental_api.dart' as api;
 import 'package:opentelemetry/src/experimental_sdk.dart' as sdk;
 import 'package:opentelemetry/src/sdk/common/attributes.dart';
+import 'package:opentelemetry/src/sdk/logs/log_record_limits.dart';
 
-Map<String, dynamic> _wrapListAttrsToMap(List<Attribute> attrs) {
-    final res = <String, dynamic>{};
-    for (final attr in attrs) {
-      res[attr.key] = attr.value;
-    }
-    return res;
-  }
+Attributes _convertListAttrs(List<Attribute> attrs) {
+  return Attributes.empty()..addAll(attrs);
+}
 
 extension _AttributesRepr on Attributes {
   Map<String, dynamic> get attributesRepr {
@@ -24,20 +21,29 @@ extension _AttributesRepr on Attributes {
   }
 }
 
-extension _instrumentationScopeRepr on sdk.InstrumentationScope {
+extension _InstrumentationScopeRepr on sdk.InstrumentationScope {
   Map<String, dynamic> get instrumentationScopeRepr {
     return {
       'name': name,
       'version': version,
       'schema_url': schemaUrl,
-      'attributes': _wrapListAttrsToMap(attributes),
+      'attributes': _convertListAttrs(attributes).attributesRepr,
     };
   }
 }
 
 class LogRecordData extends api.LogRecord {
+  LogRecordLimits limits;
   sdk.Resource resource;
   sdk.InstrumentationScope instrumentationScope;
+  int _droppedAttributes = 0;
+
+  int get droppedAttributes => _droppedAttributes;
+
+  Attributes get attributesCollection => _convertListAttrs(attributes);
+
+  @override
+  set attributes(List<Attribute> value) => setAttributes(value);
 
   @protected
   LogRecordData(
@@ -48,6 +54,7 @@ class LogRecordData extends api.LogRecord {
       super.severityText,
       super.body,
       super.attributes,
+      this.limits,
       this.resource,
       this.instrumentationScope);
 
@@ -61,9 +68,10 @@ class LogRecordData extends api.LogRecord {
             logRecord.severityText,
             logRecord.body,
             logRecord.attributes,
+            LogRecordLimits.unset(),
             resource,
             instrumentationScope);
-
+  
   LogRecordData.copy(LogRecordData logRecordData): this(
     logRecordData.timestamp,
     logRecordData.observedTimestamp,
@@ -72,10 +80,27 @@ class LogRecordData extends api.LogRecord {
     logRecordData.severityText,
     logRecordData.body,
     logRecordData.attributes,
+    logRecordData.limits,
     logRecordData.resource,
     logRecordData.instrumentationScope
   );
 
+  LogRecordData withLimits(LogRecordLimits limits) {
+    this.limits = limits;
+    return LogRecordData.copy(this);
+  }
+
+  void setAttributes(List<Attribute> attrs) {
+    attrs.forEach(addAttribute);
+  }
+
+  void addAttribute(Attribute attr) {
+    if (limits.attributeCountLimit != -1 && attributes.length >= limits.attributeCountLimit) {
+      _droppedAttributes++;
+      return;
+    }
+    attributes.add(limits.applyValueLengthLimit(attr));
+  }
 
 
   Map<String, dynamic> toJson() {
@@ -88,9 +113,10 @@ class LogRecordData extends api.LogRecord {
       'severityNumber': severityNumber,
       'severityText': severityText,
       'body': body,
-      'attributes': _wrapListAttrsToMap(attributes),
+      'attributes': attributesCollection.attributesRepr,
       'resource': resource.attributes.attributesRepr,
       'instrumentationScope': instrumentationScope.instrumentationScopeRepr,
+      'droppedAttributes': _droppedAttributes,
     };
   }
 }

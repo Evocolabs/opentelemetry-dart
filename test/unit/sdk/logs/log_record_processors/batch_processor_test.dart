@@ -1,13 +1,11 @@
 @TestOn('vm')
 import 'package:opentelemetry/src/sdk/logs/data/read_write_log_record.dart';
-import 'package:opentelemetry/src/sdk/logs/exporters/log_record_exporter.dart';
 import 'package:opentelemetry/src/sdk/logs/log_record_processors/batch_processor.dart';
 import 'package:test/test.dart';
 import 'package:mockito/mockito.dart';
 
 import '../../../mocks.dart';
 
-// @TestOn('vm')
 
 void main() {
   late BatchLogRecordProcessor batchLogRecordProcessor;

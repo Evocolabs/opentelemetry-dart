@@ -38,5 +38,5 @@ class LogRecord {
         observedTimestamp =
             observedTimestamp ?? Int64(DateTime.now().millisecondsSinceEpoch),
         spanContext = spanContext ?? SpanContext.invalid(),
-        attributes = attributes ?? [];
+        attributes = attributes ?? <Attribute>[];
 }
