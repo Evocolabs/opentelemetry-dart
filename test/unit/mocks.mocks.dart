@@ -3,28 +3,29 @@
 // Do not manually edit this file.
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'dart:async' as _i9;
-import 'dart:convert' as _i10;
-import 'dart:typed_data' as _i11;
+import 'dart:async' as _i11;
+import 'dart:convert' as _i12;
+import 'dart:typed_data' as _i13;
 
 import 'package:fixnum/fixnum.dart' as _i4;
 import 'package:http/http.dart' as _i3;
 import 'package:mockito/mockito.dart' as _i1;
-import 'package:mockito/src/dummies.dart' as _i8;
+import 'package:mockito/src/dummies.dart' as _i10;
 import 'package:opentelemetry/api.dart' as _i2;
 import 'package:opentelemetry/sdk.dart' as _i5;
-import 'package:opentelemetry/src/api/context/context.dart' as _i7;
-import 'package:opentelemetry/src/api/logs/log_record.dart' as _i16;
+import 'package:opentelemetry/src/api/context/context.dart' as _i9;
+import 'package:opentelemetry/src/api/logs/log_record.dart' as _i17;
 import 'package:opentelemetry/src/sdk/common/attributes.dart' as _i6;
-import 'package:opentelemetry/src/sdk/logs/data/log_record_data.dart' as _i15;
+import 'package:opentelemetry/src/sdk/logs/data/log_record_data.dart' as _i8;
 import 'package:opentelemetry/src/sdk/logs/data/read_write_log_record.dart'
-    as _i13;
+    as _i15;
 import 'package:opentelemetry/src/sdk/logs/data/readable_log_record.dart'
-    as _i17;
+    as _i18;
 import 'package:opentelemetry/src/sdk/logs/exporters/log_record_exporter.dart'
-    as _i14;
+    as _i16;
+import 'package:opentelemetry/src/sdk/logs/log_record_limits.dart' as _i7;
 import 'package:opentelemetry/src/sdk/logs/log_record_processors/log_record_processor.dart'
-    as _i12;
+    as _i14;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -151,6 +152,37 @@ class _FakeResource_10 extends _i1.SmartFake implements _i5.Resource {
         );
 }
 
+class _FakeObject_11 extends _i1.SmartFake implements Object {
+  _FakeObject_11(
+    Object parent,
+    Invocation parentInvocation,
+  ) : super(
+          parent,
+          parentInvocation,
+        );
+}
+
+class _FakeLogRecordLimits_12 extends _i1.SmartFake
+    implements _i7.LogRecordLimits {
+  _FakeLogRecordLimits_12(
+    Object parent,
+    Invocation parentInvocation,
+  ) : super(
+          parent,
+          parentInvocation,
+        );
+}
+
+class _FakeLogRecordData_13 extends _i1.SmartFake implements _i8.LogRecordData {
+  _FakeLogRecordData_13(
+    Object parent,
+    Invocation parentInvocation,
+  ) : super(
+          parent,
+          parentInvocation,
+        );
+}
+
 /// A class which mocks [Context].
 ///
 /// See the documentation for Mockito's code generation for more information.
@@ -182,7 +214,7 @@ class MockContext extends _i1.Mock implements _i2.Context {
       ) as _i2.SpanContext);
 
   @override
-  T? getValue<T>(_i7.ContextKey? key) => (super.noSuchMethod(
+  T? getValue<T>(_i9.ContextKey? key) => (super.noSuchMethod(
         Invocation.method(
           #getValue,
           [key],
@@ -192,7 +224,7 @@ class MockContext extends _i1.Mock implements _i2.Context {
 
   @override
   _i2.Context setValue(
-    _i7.ContextKey? key,
+    _i9.ContextKey? key,
     Object? value,
   ) =>
       (super.noSuchMethod(
@@ -253,14 +285,14 @@ class MockContext extends _i1.Mock implements _i2.Context {
           #execute,
           [fn],
         ),
-        returnValue: _i8.dummyValue<R>(
+        returnValue: _i10.dummyValue<R>(
           this,
           Invocation.method(
             #execute,
             [fn],
           ),
         ),
-        returnValueForMissingStub: _i8.dummyValue<R>(
+        returnValueForMissingStub: _i10.dummyValue<R>(
           this,
           Invocation.method(
             #execute,
@@ -275,7 +307,7 @@ class MockContext extends _i1.Mock implements _i2.Context {
 /// See the documentation for Mockito's code generation for more information.
 class MockHttpClient extends _i1.Mock implements _i3.Client {
   @override
-  _i9.Future<_i3.Response> head(
+  _i11.Future<_i3.Response> head(
     Uri? url, {
     Map<String, String>? headers,
   }) =>
@@ -285,7 +317,7 @@ class MockHttpClient extends _i1.Mock implements _i3.Client {
           [url],
           {#headers: headers},
         ),
-        returnValue: _i9.Future<_i3.Response>.value(_FakeResponse_3(
+        returnValue: _i11.Future<_i3.Response>.value(_FakeResponse_3(
           this,
           Invocation.method(
             #head,
@@ -294,7 +326,7 @@ class MockHttpClient extends _i1.Mock implements _i3.Client {
           ),
         )),
         returnValueForMissingStub:
-            _i9.Future<_i3.Response>.value(_FakeResponse_3(
+            _i11.Future<_i3.Response>.value(_FakeResponse_3(
           this,
           Invocation.method(
             #head,
@@ -302,10 +334,10 @@ class MockHttpClient extends _i1.Mock implements _i3.Client {
             {#headers: headers},
           ),
         )),
-      ) as _i9.Future<_i3.Response>);
+      ) as _i11.Future<_i3.Response>);
 
   @override
-  _i9.Future<_i3.Response> get(
+  _i11.Future<_i3.Response> get(
     Uri? url, {
     Map<String, String>? headers,
   }) =>
@@ -315,7 +347,7 @@ class MockHttpClient extends _i1.Mock implements _i3.Client {
           [url],
           {#headers: headers},
         ),
-        returnValue: _i9.Future<_i3.Response>.value(_FakeResponse_3(
+        returnValue: _i11.Future<_i3.Response>.value(_FakeResponse_3(
           this,
           Invocation.method(
             #get,
@@ -324,7 +356,7 @@ class MockHttpClient extends _i1.Mock implements _i3.Client {
           ),
         )),
         returnValueForMissingStub:
-            _i9.Future<_i3.Response>.value(_FakeResponse_3(
+            _i11.Future<_i3.Response>.value(_FakeResponse_3(
           this,
           Invocation.method(
             #get,
@@ -332,14 +364,14 @@ class MockHttpClient extends _i1.Mock implements _i3.Client {
             {#headers: headers},
           ),
         )),
-      ) as _i9.Future<_i3.Response>);
+      ) as _i11.Future<_i3.Response>);
 
   @override
-  _i9.Future<_i3.Response> post(
+  _i11.Future<_i3.Response> post(
     Uri? url, {
     Map<String, String>? headers,
     Object? body,
-    _i10.Encoding? encoding,
+    _i12.Encoding? encoding,
   }) =>
       (super.noSuchMethod(
         Invocation.method(
@@ -351,7 +383,7 @@ class MockHttpClient extends _i1.Mock implements _i3.Client {
             #encoding: encoding,
           },
         ),
-        returnValue: _i9.Future<_i3.Response>.value(_FakeResponse_3(
+        returnValue: _i11.Future<_i3.Response>.value(_FakeResponse_3(
           this,
           Invocation.method(
             #post,
@@ -364,7 +396,7 @@ class MockHttpClient extends _i1.Mock implements _i3.Client {
           ),
         )),
         returnValueForMissingStub:
-            _i9.Future<_i3.Response>.value(_FakeResponse_3(
+            _i11.Future<_i3.Response>.value(_FakeResponse_3(
           this,
           Invocation.method(
             #post,
@@ -376,14 +408,14 @@ class MockHttpClient extends _i1.Mock implements _i3.Client {
             },
           ),
         )),
-      ) as _i9.Future<_i3.Response>);
+      ) as _i11.Future<_i3.Response>);
 
   @override
-  _i9.Future<_i3.Response> put(
+  _i11.Future<_i3.Response> put(
     Uri? url, {
     Map<String, String>? headers,
     Object? body,
-    _i10.Encoding? encoding,
+    _i12.Encoding? encoding,
   }) =>
       (super.noSuchMethod(
         Invocation.method(
@@ -395,7 +427,7 @@ class MockHttpClient extends _i1.Mock implements _i3.Client {
             #encoding: encoding,
           },
         ),
-        returnValue: _i9.Future<_i3.Response>.value(_FakeResponse_3(
+        returnValue: _i11.Future<_i3.Response>.value(_FakeResponse_3(
           this,
           Invocation.method(
             #put,
@@ -408,7 +440,7 @@ class MockHttpClient extends _i1.Mock implements _i3.Client {
           ),
         )),
         returnValueForMissingStub:
-            _i9.Future<_i3.Response>.value(_FakeResponse_3(
+            _i11.Future<_i3.Response>.value(_FakeResponse_3(
           this,
           Invocation.method(
             #put,
@@ -420,14 +452,14 @@ class MockHttpClient extends _i1.Mock implements _i3.Client {
             },
           ),
         )),
-      ) as _i9.Future<_i3.Response>);
+      ) as _i11.Future<_i3.Response>);
 
   @override
-  _i9.Future<_i3.Response> patch(
+  _i11.Future<_i3.Response> patch(
     Uri? url, {
     Map<String, String>? headers,
     Object? body,
-    _i10.Encoding? encoding,
+    _i12.Encoding? encoding,
   }) =>
       (super.noSuchMethod(
         Invocation.method(
@@ -439,7 +471,7 @@ class MockHttpClient extends _i1.Mock implements _i3.Client {
             #encoding: encoding,
           },
         ),
-        returnValue: _i9.Future<_i3.Response>.value(_FakeResponse_3(
+        returnValue: _i11.Future<_i3.Response>.value(_FakeResponse_3(
           this,
           Invocation.method(
             #patch,
@@ -452,7 +484,7 @@ class MockHttpClient extends _i1.Mock implements _i3.Client {
           ),
         )),
         returnValueForMissingStub:
-            _i9.Future<_i3.Response>.value(_FakeResponse_3(
+            _i11.Future<_i3.Response>.value(_FakeResponse_3(
           this,
           Invocation.method(
             #patch,
@@ -464,14 +496,14 @@ class MockHttpClient extends _i1.Mock implements _i3.Client {
             },
           ),
         )),
-      ) as _i9.Future<_i3.Response>);
+      ) as _i11.Future<_i3.Response>);
 
   @override
-  _i9.Future<_i3.Response> delete(
+  _i11.Future<_i3.Response> delete(
     Uri? url, {
     Map<String, String>? headers,
     Object? body,
-    _i10.Encoding? encoding,
+    _i12.Encoding? encoding,
   }) =>
       (super.noSuchMethod(
         Invocation.method(
@@ -483,7 +515,7 @@ class MockHttpClient extends _i1.Mock implements _i3.Client {
             #encoding: encoding,
           },
         ),
-        returnValue: _i9.Future<_i3.Response>.value(_FakeResponse_3(
+        returnValue: _i11.Future<_i3.Response>.value(_FakeResponse_3(
           this,
           Invocation.method(
             #delete,
@@ -496,7 +528,7 @@ class MockHttpClient extends _i1.Mock implements _i3.Client {
           ),
         )),
         returnValueForMissingStub:
-            _i9.Future<_i3.Response>.value(_FakeResponse_3(
+            _i11.Future<_i3.Response>.value(_FakeResponse_3(
           this,
           Invocation.method(
             #delete,
@@ -508,10 +540,10 @@ class MockHttpClient extends _i1.Mock implements _i3.Client {
             },
           ),
         )),
-      ) as _i9.Future<_i3.Response>);
+      ) as _i11.Future<_i3.Response>);
 
   @override
-  _i9.Future<String> read(
+  _i11.Future<String> read(
     Uri? url, {
     Map<String, String>? headers,
   }) =>
@@ -521,7 +553,7 @@ class MockHttpClient extends _i1.Mock implements _i3.Client {
           [url],
           {#headers: headers},
         ),
-        returnValue: _i9.Future<String>.value(_i8.dummyValue<String>(
+        returnValue: _i11.Future<String>.value(_i10.dummyValue<String>(
           this,
           Invocation.method(
             #read,
@@ -530,7 +562,7 @@ class MockHttpClient extends _i1.Mock implements _i3.Client {
           ),
         )),
         returnValueForMissingStub:
-            _i9.Future<String>.value(_i8.dummyValue<String>(
+            _i11.Future<String>.value(_i10.dummyValue<String>(
           this,
           Invocation.method(
             #read,
@@ -538,10 +570,10 @@ class MockHttpClient extends _i1.Mock implements _i3.Client {
             {#headers: headers},
           ),
         )),
-      ) as _i9.Future<String>);
+      ) as _i11.Future<String>);
 
   @override
-  _i9.Future<_i11.Uint8List> readBytes(
+  _i11.Future<_i13.Uint8List> readBytes(
     Uri? url, {
     Map<String, String>? headers,
   }) =>
@@ -551,20 +583,20 @@ class MockHttpClient extends _i1.Mock implements _i3.Client {
           [url],
           {#headers: headers},
         ),
-        returnValue: _i9.Future<_i11.Uint8List>.value(_i11.Uint8List(0)),
+        returnValue: _i11.Future<_i13.Uint8List>.value(_i13.Uint8List(0)),
         returnValueForMissingStub:
-            _i9.Future<_i11.Uint8List>.value(_i11.Uint8List(0)),
-      ) as _i9.Future<_i11.Uint8List>);
+            _i11.Future<_i13.Uint8List>.value(_i13.Uint8List(0)),
+      ) as _i11.Future<_i13.Uint8List>);
 
   @override
-  _i9.Future<_i3.StreamedResponse> send(_i3.BaseRequest? request) =>
+  _i11.Future<_i3.StreamedResponse> send(_i3.BaseRequest? request) =>
       (super.noSuchMethod(
         Invocation.method(
           #send,
           [request],
         ),
         returnValue:
-            _i9.Future<_i3.StreamedResponse>.value(_FakeStreamedResponse_4(
+            _i11.Future<_i3.StreamedResponse>.value(_FakeStreamedResponse_4(
           this,
           Invocation.method(
             #send,
@@ -572,14 +604,14 @@ class MockHttpClient extends _i1.Mock implements _i3.Client {
           ),
         )),
         returnValueForMissingStub:
-            _i9.Future<_i3.StreamedResponse>.value(_FakeStreamedResponse_4(
+            _i11.Future<_i3.StreamedResponse>.value(_FakeStreamedResponse_4(
           this,
           Invocation.method(
             #send,
             [request],
           ),
         )),
-      ) as _i9.Future<_i3.StreamedResponse>);
+      ) as _i11.Future<_i3.StreamedResponse>);
 
   @override
   void close() => super.noSuchMethod(
@@ -713,11 +745,11 @@ class MockReadOnlySpan extends _i1.Mock implements _i5.ReadOnlySpan {
   @override
   String get name => (super.noSuchMethod(
         Invocation.getter(#name),
-        returnValue: _i8.dummyValue<String>(
+        returnValue: _i10.dummyValue<String>(
           this,
           Invocation.getter(#name),
         ),
-        returnValueForMissingStub: _i8.dummyValue<String>(
+        returnValueForMissingStub: _i10.dummyValue<String>(
           this,
           Invocation.getter(#name),
         ),
@@ -927,10 +959,10 @@ class MockSpanProcessor extends _i1.Mock implements _i5.SpanProcessor {
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockLogRecordProcessor extends _i1.Mock
-    implements _i12.LogRecordProcessor {
+    implements _i14.LogRecordProcessor {
   @override
   void onEmit(
-    _i13.ReadWriteLogRecord? record, {
+    _i15.ReadWriteLogRecord? record, {
     _i2.SpanContext? spanContext,
   }) =>
       super.noSuchMethod(
@@ -966,9 +998,9 @@ class MockLogRecordProcessor extends _i1.Mock
 /// A class which mocks [LogRecordExporter].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockLogRecordExporter extends _i1.Mock implements _i14.LogRecordExporter {
+class MockLogRecordExporter extends _i1.Mock implements _i16.LogRecordExporter {
   @override
-  void export(List<_i15.LogRecordData>? records) => super.noSuchMethod(
+  void export(List<_i8.LogRecordData>? records) => super.noSuchMethod(
         Invocation.method(
           #export,
           [records],
@@ -1000,7 +1032,7 @@ class MockLogRecordExporter extends _i1.Mock implements _i14.LogRecordExporter {
 /// A class which mocks [LogRecord].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockLogRecord extends _i1.Mock implements _i16.LogRecord {
+class MockLogRecord extends _i1.Mock implements _i17.LogRecord {
   @override
   _i4.Int64 get timestamp => (super.noSuchMethod(
         Invocation.getter(#timestamp),
@@ -1084,14 +1116,14 @@ class MockLogRecord extends _i1.Mock implements _i16.LogRecord {
       );
 
   @override
-  _i16.SeverityText get severityText => (super.noSuchMethod(
+  _i17.SeverityText get severityText => (super.noSuchMethod(
         Invocation.getter(#severityText),
-        returnValue: _i16.SeverityText.trace,
-        returnValueForMissingStub: _i16.SeverityText.trace,
-      ) as _i16.SeverityText);
+        returnValue: _i17.SeverityText.trace,
+        returnValueForMissingStub: _i17.SeverityText.trace,
+      ) as _i17.SeverityText);
 
   @override
-  set severityText(_i16.SeverityText? _severityText) => super.noSuchMethod(
+  set severityText(_i17.SeverityText? _severityText) => super.noSuchMethod(
         Invocation.setter(
           #severityText,
           _severityText,
@@ -1100,20 +1132,20 @@ class MockLogRecord extends _i1.Mock implements _i16.LogRecord {
       );
 
   @override
-  String get body => (super.noSuchMethod(
+  Object get body => (super.noSuchMethod(
         Invocation.getter(#body),
-        returnValue: _i8.dummyValue<String>(
+        returnValue: _FakeObject_11(
           this,
           Invocation.getter(#body),
         ),
-        returnValueForMissingStub: _i8.dummyValue<String>(
+        returnValueForMissingStub: _FakeObject_11(
           this,
           Invocation.getter(#body),
         ),
-      ) as String);
+      ) as Object);
 
   @override
-  set body(String? _body) => super.noSuchMethod(
+  set body(Object? _body) => super.noSuchMethod(
         Invocation.setter(
           #body,
           _body,
@@ -1142,7 +1174,29 @@ class MockLogRecord extends _i1.Mock implements _i16.LogRecord {
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockReadWriteLogRecord extends _i1.Mock
-    implements _i13.ReadWriteLogRecord {
+    implements _i15.ReadWriteLogRecord {
+  @override
+  _i7.LogRecordLimits get limits => (super.noSuchMethod(
+        Invocation.getter(#limits),
+        returnValue: _FakeLogRecordLimits_12(
+          this,
+          Invocation.getter(#limits),
+        ),
+        returnValueForMissingStub: _FakeLogRecordLimits_12(
+          this,
+          Invocation.getter(#limits),
+        ),
+      ) as _i7.LogRecordLimits);
+
+  @override
+  set limits(_i7.LogRecordLimits? _limits) => super.noSuchMethod(
+        Invocation.setter(
+          #limits,
+          _limits,
+        ),
+        returnValueForMissingStub: null,
+      );
+
   @override
   _i5.Resource get resource => (super.noSuchMethod(
         Invocation.getter(#resource),
@@ -1189,6 +1243,35 @@ class MockReadWriteLogRecord extends _i1.Mock
       );
 
   @override
+  int get droppedAttributes => (super.noSuchMethod(
+        Invocation.getter(#droppedAttributes),
+        returnValue: 0,
+        returnValueForMissingStub: 0,
+      ) as int);
+
+  @override
+  _i6.Attributes get attributesCollection => (super.noSuchMethod(
+        Invocation.getter(#attributesCollection),
+        returnValue: _FakeAttributes_9(
+          this,
+          Invocation.getter(#attributesCollection),
+        ),
+        returnValueForMissingStub: _FakeAttributes_9(
+          this,
+          Invocation.getter(#attributesCollection),
+        ),
+      ) as _i6.Attributes);
+
+  @override
+  set attributes(List<_i2.Attribute>? value) => super.noSuchMethod(
+        Invocation.setter(
+          #attributes,
+          value,
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
   _i4.Int64 get timestamp => (super.noSuchMethod(
         Invocation.getter(#timestamp),
         returnValue: _FakeInt64_6(
@@ -1271,14 +1354,14 @@ class MockReadWriteLogRecord extends _i1.Mock
       );
 
   @override
-  _i16.SeverityText get severityText => (super.noSuchMethod(
+  _i17.SeverityText get severityText => (super.noSuchMethod(
         Invocation.getter(#severityText),
-        returnValue: _i16.SeverityText.trace,
-        returnValueForMissingStub: _i16.SeverityText.trace,
-      ) as _i16.SeverityText);
+        returnValue: _i17.SeverityText.trace,
+        returnValueForMissingStub: _i17.SeverityText.trace,
+      ) as _i17.SeverityText);
 
   @override
-  set severityText(_i16.SeverityText? _severityText) => super.noSuchMethod(
+  set severityText(_i17.SeverityText? _severityText) => super.noSuchMethod(
         Invocation.setter(
           #severityText,
           _severityText,
@@ -1287,20 +1370,20 @@ class MockReadWriteLogRecord extends _i1.Mock
       );
 
   @override
-  String get body => (super.noSuchMethod(
+  Object get body => (super.noSuchMethod(
         Invocation.getter(#body),
-        returnValue: _i8.dummyValue<String>(
+        returnValue: _FakeObject_11(
           this,
           Invocation.getter(#body),
         ),
-        returnValueForMissingStub: _i8.dummyValue<String>(
+        returnValueForMissingStub: _FakeObject_11(
           this,
           Invocation.getter(#body),
         ),
-      ) as String);
+      ) as Object);
 
   @override
-  set body(String? _body) => super.noSuchMethod(
+  set body(Object? _body) => super.noSuchMethod(
         Invocation.setter(
           #body,
           _body,
@@ -1316,10 +1399,42 @@ class MockReadWriteLogRecord extends _i1.Mock
       ) as List<_i2.Attribute>);
 
   @override
-  set attributes(List<_i2.Attribute>? _attributes) => super.noSuchMethod(
-        Invocation.setter(
-          #attributes,
-          _attributes,
+  _i8.LogRecordData withLimits(_i7.LogRecordLimits? limits) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #withLimits,
+          [limits],
+        ),
+        returnValue: _FakeLogRecordData_13(
+          this,
+          Invocation.method(
+            #withLimits,
+            [limits],
+          ),
+        ),
+        returnValueForMissingStub: _FakeLogRecordData_13(
+          this,
+          Invocation.method(
+            #withLimits,
+            [limits],
+          ),
+        ),
+      ) as _i8.LogRecordData);
+
+  @override
+  void setAttributes(List<_i2.Attribute>? attrs) => super.noSuchMethod(
+        Invocation.method(
+          #setAttributes,
+          [attrs],
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  void addAttribute(_i2.Attribute? attr) => super.noSuchMethod(
+        Invocation.method(
+          #addAttribute,
+          [attr],
         ),
         returnValueForMissingStub: null,
       );
@@ -1338,7 +1453,7 @@ class MockReadWriteLogRecord extends _i1.Mock
 /// A class which mocks [ReadableLogRecord].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockReadableLogRecord extends _i1.Mock implements _i17.ReadableLogRecord {
+class MockReadableLogRecord extends _i1.Mock implements _i18.ReadableLogRecord {
   @override
   set timestamp(_i4.Int64? value) => super.noSuchMethod(
         Invocation.setter(
@@ -1376,7 +1491,7 @@ class MockReadableLogRecord extends _i1.Mock implements _i17.ReadableLogRecord {
       );
 
   @override
-  set severityText(_i16.SeverityText? value) => super.noSuchMethod(
+  set severityText(_i17.SeverityText? value) => super.noSuchMethod(
         Invocation.setter(
           #severityText,
           value,
@@ -1385,7 +1500,7 @@ class MockReadableLogRecord extends _i1.Mock implements _i17.ReadableLogRecord {
       );
 
   @override
-  set body(String? value) => super.noSuchMethod(
+  set body(Object? value) => super.noSuchMethod(
         Invocation.setter(
           #body,
           value,
@@ -1397,6 +1512,15 @@ class MockReadableLogRecord extends _i1.Mock implements _i17.ReadableLogRecord {
   set attributes(List<_i2.Attribute>? value) => super.noSuchMethod(
         Invocation.setter(
           #attributes,
+          value,
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  set limits(_i7.LogRecordLimits? value) => super.noSuchMethod(
+        Invocation.setter(
+          #limits,
           value,
         ),
         returnValueForMissingStub: null,
@@ -1420,6 +1544,19 @@ class MockReadableLogRecord extends _i1.Mock implements _i17.ReadableLogRecord {
         ),
         returnValueForMissingStub: null,
       );
+
+  @override
+  _i7.LogRecordLimits get limits => (super.noSuchMethod(
+        Invocation.getter(#limits),
+        returnValue: _FakeLogRecordLimits_12(
+          this,
+          Invocation.getter(#limits),
+        ),
+        returnValueForMissingStub: _FakeLogRecordLimits_12(
+          this,
+          Invocation.getter(#limits),
+        ),
+      ) as _i7.LogRecordLimits);
 
   @override
   _i5.Resource get resource => (super.noSuchMethod(
@@ -1446,6 +1583,26 @@ class MockReadableLogRecord extends _i1.Mock implements _i17.ReadableLogRecord {
           Invocation.getter(#instrumentationScope),
         ),
       ) as _i5.InstrumentationScope);
+
+  @override
+  int get droppedAttributes => (super.noSuchMethod(
+        Invocation.getter(#droppedAttributes),
+        returnValue: 0,
+        returnValueForMissingStub: 0,
+      ) as int);
+
+  @override
+  _i6.Attributes get attributesCollection => (super.noSuchMethod(
+        Invocation.getter(#attributesCollection),
+        returnValue: _FakeAttributes_9(
+          this,
+          Invocation.getter(#attributesCollection),
+        ),
+        returnValueForMissingStub: _FakeAttributes_9(
+          this,
+          Invocation.getter(#attributesCollection),
+        ),
+      ) as _i6.Attributes);
 
   @override
   _i4.Int64 get timestamp => (super.noSuchMethod(
@@ -1494,24 +1651,24 @@ class MockReadableLogRecord extends _i1.Mock implements _i17.ReadableLogRecord {
       ) as int);
 
   @override
-  _i16.SeverityText get severityText => (super.noSuchMethod(
+  _i17.SeverityText get severityText => (super.noSuchMethod(
         Invocation.getter(#severityText),
-        returnValue: _i16.SeverityText.trace,
-        returnValueForMissingStub: _i16.SeverityText.trace,
-      ) as _i16.SeverityText);
+        returnValue: _i17.SeverityText.trace,
+        returnValueForMissingStub: _i17.SeverityText.trace,
+      ) as _i17.SeverityText);
 
   @override
-  String get body => (super.noSuchMethod(
+  Object get body => (super.noSuchMethod(
         Invocation.getter(#body),
-        returnValue: _i8.dummyValue<String>(
+        returnValue: _FakeObject_11(
           this,
           Invocation.getter(#body),
         ),
-        returnValueForMissingStub: _i8.dummyValue<String>(
+        returnValueForMissingStub: _FakeObject_11(
           this,
           Invocation.getter(#body),
         ),
-      ) as String);
+      ) as Object);
 
   @override
   List<_i2.Attribute> get attributes => (super.noSuchMethod(
@@ -1519,6 +1676,47 @@ class MockReadableLogRecord extends _i1.Mock implements _i17.ReadableLogRecord {
         returnValue: <_i2.Attribute>[],
         returnValueForMissingStub: <_i2.Attribute>[],
       ) as List<_i2.Attribute>);
+
+  @override
+  _i8.LogRecordData withLimits(_i7.LogRecordLimits? limits) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #withLimits,
+          [limits],
+        ),
+        returnValue: _FakeLogRecordData_13(
+          this,
+          Invocation.method(
+            #withLimits,
+            [limits],
+          ),
+        ),
+        returnValueForMissingStub: _FakeLogRecordData_13(
+          this,
+          Invocation.method(
+            #withLimits,
+            [limits],
+          ),
+        ),
+      ) as _i8.LogRecordData);
+
+  @override
+  void setAttributes(List<_i2.Attribute>? attrs) => super.noSuchMethod(
+        Invocation.method(
+          #setAttributes,
+          [attrs],
+        ),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  void addAttribute(_i2.Attribute? attr) => super.noSuchMethod(
+        Invocation.method(
+          #addAttribute,
+          [attr],
+        ),
+        returnValueForMissingStub: null,
+      );
 
   @override
   Map<String, dynamic> toJson() => (super.noSuchMethod(

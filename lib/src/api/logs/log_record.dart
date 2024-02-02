@@ -4,6 +4,7 @@ import 'package:opentelemetry/api.dart';
 import 'package:opentelemetry/sdk.dart';
 
 enum SeverityText { trace, debug, info, warn, error, fatal, unknown }
+
 // Log Record conforms to the OpenTelemetry specification for Log Data Model
 class LogRecord {
   static final DateTimeTimeProvider _timeProvider = DateTimeTimeProvider();
@@ -32,4 +33,20 @@ class LogRecord {
         observedTimestamp = observedTimestamp ?? _timeProvider.now,
         spanContext = spanContext ?? SpanContext.invalid(),
         attributes = attributes ?? <Attribute>[];
+
+  void recordException(dynamic exception,
+      {StackTrace stackTrace = StackTrace.empty}) {
+    [
+      Attribute.fromString(
+          SemanticAttributes.exceptionType, exception.runtimeType.toString()),
+      Attribute.fromString(
+          SemanticAttributes.exceptionMessage, exception.toString()),
+      Attribute.fromString(
+          SemanticAttributes.exceptionStacktrace, stackTrace.toString())
+    ].forEach(addAttribute);
+  }
+
+  void addAttribute(Attribute attr) {
+    attributes.add(attr);
+  }
 }

@@ -3,7 +3,6 @@ import 'package:opentelemetry/api.dart';
 import 'package:opentelemetry/sdk.dart' as sdk;
 import 'package:opentelemetry/src/api/logs/log_record.dart';
 import 'package:opentelemetry/src/experimental_api.dart' as api;
-import 'package:opentelemetry/src/experimental_sdk.dart' as sdk;
 import 'package:opentelemetry/src/sdk/common/attributes.dart';
 import 'package:opentelemetry/src/sdk/logs/log_record_limits.dart';
 
@@ -43,7 +42,10 @@ class LogRecordData extends api.LogRecord {
   Attributes get attributesCollection => _convertListAttrs(attributes);
 
   @override
-  set attributes(List<Attribute> value) => setAttributes(value);
+  set attributes(List<Attribute> value) {
+    attributes.clear();
+    value.forEach(addAttribute);
+  }
 
   @protected
   LogRecordData(
@@ -90,10 +92,7 @@ class LogRecordData extends api.LogRecord {
     return LogRecordData.copy(this);
   }
 
-  void setAttributes(List<Attribute> attrs) {
-    attrs.forEach(addAttribute);
-  }
-
+  @override
   void addAttribute(Attribute attr) {
     if (limits.attributeCountLimit != -1 && attributes.length >= limits.attributeCountLimit) {
       _droppedAttributes++;
@@ -120,7 +119,6 @@ class LogRecordData extends api.LogRecord {
     };
   }
 }
-
 
 
 
