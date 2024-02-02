@@ -29,7 +29,7 @@ class ReadableLogRecord extends LogRecordData {
   set severityText(SeverityText value) => throw UnmodifiableError();
 
   @override
-  set body(String value) => throw UnmodifiableError();
+  set body(Object value) => throw UnmodifiableError();
 
   @override
   set attributes(List<Attribute> value) => throw UnmodifiableError();
