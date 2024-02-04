@@ -32,13 +32,20 @@ extension _InstrumentationScopeRepr on sdk.InstrumentationScope {
 }
 
 class LogRecordData extends api.LogRecord {
+  /// The limits to be applied to the log record.
   LogRecordLimits limits;
+
+  /// The resource associated with the log record.
   sdk.Resource resource;
+  
+  /// The instrumentation scope associated with the log record.
   sdk.InstrumentationScope instrumentationScope;
   int _droppedAttributes = 0;
 
+  /// The number of attributes that were dropped from the log record.
   int get droppedAttributes => _droppedAttributes;
 
+  /// The attributes of type [Attributes] associated with the log record.
   Attributes get attributesCollection => _convertListAttrs(attributes);
 
   @override
@@ -87,6 +94,8 @@ class LogRecordData extends api.LogRecord {
     logRecordData.instrumentationScope
   );
 
+  /// Returns a new [LogRecordData] with the same data as this one, but with the
+  /// provided [limits].
   LogRecordData withLimits(LogRecordLimits limits) {
     this.limits = limits;
     return LogRecordData.copy(this);
