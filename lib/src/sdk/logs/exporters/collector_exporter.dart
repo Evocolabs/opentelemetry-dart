@@ -1,9 +1,8 @@
 // ignore_for_file: curly_braces_in_flow_control_structures
 
 import 'package:fixnum/fixnum.dart';
-import 'package:opentelemetry/sdk.dart';
-import 'package:opentelemetry/src/sdk/logs/data/log_record_data.dart';
-import 'package:opentelemetry/src/sdk/logs/exporters/log_record_exporter.dart';
+import 'package:opentelemetry/sdk.dart' as sdk;
+import 'package:opentelemetry/src/experimental_sdk.dart' as sdk;
 import 'package:http/http.dart' as http;
 import '../../proto/opentelemetry/proto/collector/logs/v1/logs_service.pb.dart'
     as pb_logs_service;
@@ -20,8 +19,8 @@ Uri _appendPathIfNeed(Uri origin, String path) {
   return origin;
 }
 
-class CollectorExporter implements LogRecordExporter {
-  static final _PATH = 'v1/logs';
+class CollectorExporter implements sdk.LogRecordExporter {
+  static const _PATH = 'v1/logs';
   final Uri uri;
   final http.Client client;
   final Map<String, String> headers;
@@ -32,7 +31,7 @@ class CollectorExporter implements LogRecordExporter {
         uri = _appendPathIfNeed(uri, _PATH);
 
   @override
-  void export(List<LogRecordData> logRecordData) {
+  void export(List<sdk.LogRecordData> logRecordData) {
     if (_shutdown) {
       return;
     }
@@ -64,14 +63,14 @@ class CollectorExporter implements LogRecordExporter {
   }
 
   Iterable<pb_logs.ResourceLogs> _logRecordsToProtobuf(
-      List<LogRecordData> logRecordData) {
+      List<sdk.LogRecordData> logRecordData) {
     // use a map of maps to group log records by resource and instrumentation library
     final rlm =
-        <Resource, Map<InstrumentationScope, List<pb_logs.LogRecord>>>{};
+        <sdk.Resource, Map<sdk.InstrumentationScope, List<pb_logs.LogRecord>>>{};
 
     for (final l in logRecordData) {
       final _scopeLogs =
-          rlm[l.resource] ?? <InstrumentationScope, List<pb_logs.LogRecord>>{};
+          rlm[l.resource] ?? <sdk.InstrumentationScope, List<pb_logs.LogRecord>>{};
       _scopeLogs[l.instrumentationScope] =
           _scopeLogs[l.instrumentationScope] ?? <pb_logs.LogRecord>[]
             ..add(_logRecordToProtobuf(l));
@@ -90,7 +89,7 @@ class CollectorExporter implements LogRecordExporter {
             .toList()));
   }
 
-  pb_resource.Resource _resourceToProtobuf(Resource resource) {
+  pb_resource.Resource _resourceToProtobuf(sdk.Resource resource) {
     final attrs = <pb_common.KeyValue>[];
     for (final attr in resource.attributes.keys) {
       attrs.add(pb_common.KeyValue(
@@ -100,7 +99,7 @@ class CollectorExporter implements LogRecordExporter {
   }
 
   pb_common.InstrumentationScope _instrumentationScopeToProtobuf(
-      InstrumentationScope instrumentationScope) {
+      sdk.InstrumentationScope instrumentationScope) {
     final pbInstrumentationScope = pb_common.InstrumentationScope(
         name: instrumentationScope.name,
         version: instrumentationScope.version,
@@ -131,7 +130,7 @@ class CollectorExporter implements LogRecordExporter {
     return pb_common.AnyValue();
   }
 
-  pb_logs.LogRecord _logRecordToProtobuf(LogRecordData logRecordData) {
+  pb_logs.LogRecord _logRecordToProtobuf(sdk.LogRecordData logRecordData) {
     final severityNumber =
         pb_logs.SeverityNumber.valueOf(logRecordData.severityNumber) ??
             pb_logs.SeverityNumber.SEVERITY_NUMBER_UNSPECIFIED;

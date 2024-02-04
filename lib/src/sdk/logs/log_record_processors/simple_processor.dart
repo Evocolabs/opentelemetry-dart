@@ -1,24 +1,21 @@
-import 'package:opentelemetry/src/api/trace/span_context.dart';
-import 'package:opentelemetry/src/sdk/logs/data/readable_log_record.dart';
-import 'package:opentelemetry/src/sdk/logs/exporters/log_record_exporter.dart';
-import 'package:opentelemetry/src/sdk/logs/log_record_processors/log_record_processor.dart';
-import 'package:opentelemetry/src/sdk/logs/data/read_write_log_record.dart';
+import 'package:opentelemetry/api.dart' as api;
+import 'package:opentelemetry/src/experimental_sdk.dart' as sdk;
 
-class SimpleLogRecordProcessor implements LogRecordProcessor {
-  final LogRecordExporter _exporter;
+class SimpleLogRecordProcessor implements sdk.LogRecordProcessor {
+  final sdk.LogRecordExporter _exporter;
   bool _shutdown = false;
 
   SimpleLogRecordProcessor(this._exporter);
 
   @override
-  void onEmit(ReadWriteLogRecord record, {SpanContext? spanContext}) {
+  void onEmit(sdk.ReadWriteLogRecord record, {api.SpanContext? spanContext}) {
     if (_shutdown) {
       return;
     }
     if (spanContext != null) {
       record.spanContext = spanContext;
     }
-    _exporter.export([ReadableLogRecord.convert(record)]);
+    _exporter.export([sdk.ReadableLogRecord.convert(record)]);
   }
 
   @override

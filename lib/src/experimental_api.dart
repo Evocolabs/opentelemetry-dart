@@ -12,4 +12,5 @@ export 'api/metrics/meter.dart' show Meter;
 export 'api/metrics/noop/noop_meter.dart' show NoopMeter;
 export 'api/logs/logger_provider.dart' show LoggerProvider;
 export 'api/logs/logger.dart' show Logger;
-export 'api/logs/log_record.dart' show LogRecord;
+export 'api/logs/log_record.dart' show LogRecord, SeverityText;
+export 'api/logs/noop/noop_logger.dart' show NoopLogger;

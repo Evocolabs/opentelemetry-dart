@@ -2,14 +2,12 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:logging/logging.dart';
-import 'package:opentelemetry/src/api/trace/span_context.dart';
-import 'package:opentelemetry/src/sdk/logs/data/log_record_data.dart';
-import 'package:opentelemetry/src/sdk/logs/data/readable_log_record.dart';
-import 'package:opentelemetry/src/sdk/logs/exporters/log_record_exporter.dart';
-import 'package:opentelemetry/src/sdk/logs/log_record_processors/log_record_processor.dart';
-import 'package:opentelemetry/src/sdk/logs/data/read_write_log_record.dart';
+import 'package:opentelemetry/api.dart' as api;
+import 'package:opentelemetry/src/experimental_api.dart' as api;
+import 'package:opentelemetry/sdk.dart' as sdk;
+import 'package:opentelemetry/src/experimental_sdk.dart' as sdk;
 
-class BatchLogRecordProcessor implements LogRecordProcessor {
+class BatchLogRecordProcessor implements sdk.LogRecordProcessor {
   //Todo: Handle timeout
   static const int _DEFAULT_MAXIMUM_QUEUE_SIZE = 2048;
   static const int _DEFAULT_MAXIMUM_BATCH_SIZE = 512;
@@ -18,14 +16,14 @@ class BatchLogRecordProcessor implements LogRecordProcessor {
 
   final Logger _logger = Logger('opentelemetry.BatchLogRecordProcessor');
 
-  final LogRecordExporter _exporter;
+  final sdk.LogRecordExporter _exporter;
   final int _maxQueueSize;
   final int _scheduledDelayMillis;
   final int _maxExportBatchSize;
   final int _exportTimeoutMillis;
 
   bool _shutdown = false;
-  final List<LogRecordData> _logRecordBuffer = [];
+  final List<sdk.LogRecordData> _logRecordBuffer = [];
   late final Timer _timer;
 
   BatchLogRecordProcessor(this._exporter,
@@ -51,18 +49,18 @@ class BatchLogRecordProcessor implements LogRecordProcessor {
   }
 
   @override
-  void onEmit(ReadWriteLogRecord record, {SpanContext? spanContext}) {
+  void onEmit(sdk.ReadWriteLogRecord record, {api.SpanContext? spanContext}) {
     if (spanContext != null) record.spanContext = spanContext;
     _addToBuffer(record);
   }
 
-  void _addToBuffer(ReadWriteLogRecord record) {
+  void _addToBuffer(sdk.ReadWriteLogRecord record) {
     if (_logRecordBuffer.length >= _maxQueueSize) {
       _logger.warning(
           'Dropping log. Exceeded maximum queue size of $_maxQueueSize');
       return;
     }
-    _logRecordBuffer.add(ReadableLogRecord.convert(record));
+    _logRecordBuffer.add(sdk.ReadableLogRecord.convert(record));
   }
 
   void _exportBatch(Timer timer) {

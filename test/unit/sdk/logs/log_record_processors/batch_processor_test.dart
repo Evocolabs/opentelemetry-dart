@@ -6,7 +6,6 @@ import 'package:mockito/mockito.dart';
 
 import '../../../mocks.dart';
 
-
 void main() {
   late BatchLogRecordProcessor batchLogRecordProcessor;
   late MockLogRecordExporter mockLogRecordExporter;
@@ -37,10 +36,10 @@ void main() {
             isA<List>().having((list) => list.length, 'length', equals(2)))))
         .called(1);
     verify(mockLogRecordExporter.export(argThat(
-            isA<List>().having((list) => list.length, 'length', equals(1)))));
+        isA<List>().having((list) => list.length, 'length', equals(1)))));
     verify(mockLogRecordExporter.forceFlush()).called(2);
   });
-  
+
   test('shutdown shuts exporter down', () {
     batchLogRecordProcessor.shutDown();
 

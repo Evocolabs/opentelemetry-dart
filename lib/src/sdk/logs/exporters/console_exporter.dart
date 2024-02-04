@@ -1,11 +1,11 @@
-import 'package:opentelemetry/src/sdk/logs/data/log_record_data.dart';
-import 'package:opentelemetry/src/sdk/logs/exporters/log_record_exporter.dart';
+import 'package:opentelemetry/src/experimental_api.dart' as api;
+import 'package:opentelemetry/src/experimental_sdk.dart' as sdk;
 
-class ConsoleExporter implements LogRecordExporter {
+class ConsoleExporter implements sdk.LogRecordExporter {
   var _shutdown = false;
 
   @override
-  void export(List<LogRecordData> records) {
+  void export(List<sdk.LogRecordData> records) {
     if (_shutdown) {
       return;
     }
@@ -25,5 +25,4 @@ class ConsoleExporter implements LogRecordExporter {
     forceFlush();
     _shutdown = true;
   }
-
 }

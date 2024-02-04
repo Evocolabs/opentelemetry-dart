@@ -1,10 +1,8 @@
 import 'package:fixnum/fixnum.dart';
-import 'package:opentelemetry/api.dart';
-import 'package:opentelemetry/sdk.dart';
-import 'package:opentelemetry/src/api/logs/log_record.dart';
-import 'package:opentelemetry/src/sdk/logs/data/log_record_data.dart';
-import 'package:opentelemetry/src/sdk/logs/log_record_limits.dart';
-
+import 'package:opentelemetry/api.dart' as api;
+import 'package:opentelemetry/sdk.dart' as sdk;
+import 'package:opentelemetry/src/experimental_api.dart' as api;
+import 'package:opentelemetry/src/experimental_sdk.dart' as sdk;
 class UnmodifiableError extends Error {
   final String message;
   UnmodifiableError({this.message = 'ReadableLogRecord is unmodifiable'});
@@ -12,7 +10,7 @@ class UnmodifiableError extends Error {
   String toString() => message;
 }
 
-class ReadableLogRecord extends LogRecordData {
+class ReadableLogRecord extends sdk.LogRecordData {
   @override
   set timestamp(Int64 value) => throw UnmodifiableError();
 
@@ -20,38 +18,38 @@ class ReadableLogRecord extends LogRecordData {
   set observedTimestamp(Int64 value) => throw UnmodifiableError();
   
   @override
-  set spanContext(SpanContext value) => throw UnmodifiableError();
+  set spanContext(api.SpanContext value) => throw UnmodifiableError();
 
   @override
   set severityNumber(int value) => throw UnmodifiableError();
 
   @override
-  set severityText(SeverityText value) => throw UnmodifiableError();
+  set severityText(api.SeverityText value) => throw UnmodifiableError();
 
   @override
   set body(Object value) => throw UnmodifiableError();
 
   @override
-  set attributes(List<Attribute> value) => throw UnmodifiableError();
+  set attributes(List<api.Attribute> value) => throw UnmodifiableError();
 
   @override
-  set limits(LogRecordLimits value) => throw UnmodifiableError();
+  set limits(sdk.LogRecordLimits value) => throw UnmodifiableError();
 
   @override
-  set resource(Resource value) => throw UnmodifiableError();
+  set resource(sdk.Resource value) => throw UnmodifiableError();
 
   @override
-  set instrumentationScope(InstrumentationScope value) => throw UnmodifiableError();
+  set instrumentationScope(sdk.InstrumentationScope value) => throw UnmodifiableError();
 
   
   ReadableLogRecord.from(
       super.resource, super.instrumentationScope, super.logRecord)
       : super.from();
   
-  ReadableLogRecord.convert(LogRecordData logRecordData): super.copy(logRecordData);
+  ReadableLogRecord.convert(sdk.LogRecordData logRecordData): super.copy(logRecordData);
 
   @override
-  LogRecordData withLimits(LogRecordLimits limits) {
+  sdk.LogRecordData withLimits(sdk.LogRecordLimits limits) {
     throw UnsupportedError('Setting limits on ReadableLogRecord is not supported');
   }
 }

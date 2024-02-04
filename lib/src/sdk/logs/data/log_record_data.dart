@@ -1,12 +1,11 @@
 import 'package:meta/meta.dart';
-import 'package:opentelemetry/api.dart';
+import 'package:opentelemetry/api.dart' as api;
 import 'package:opentelemetry/sdk.dart' as sdk;
-import 'package:opentelemetry/src/api/logs/log_record.dart';
 import 'package:opentelemetry/src/experimental_api.dart' as api;
 import 'package:opentelemetry/src/sdk/common/attributes.dart';
 import 'package:opentelemetry/src/sdk/logs/log_record_limits.dart';
 
-Attributes _convertListAttrs(List<Attribute> attrs) {
+Attributes _convertListAttrs(List<api.Attribute> attrs) {
   return Attributes.empty()..addAll(attrs);
 }
 
@@ -49,7 +48,7 @@ class LogRecordData extends api.LogRecord {
   Attributes get attributesCollection => _convertListAttrs(attributes);
 
   @override
-  set attributes(List<Attribute> value) {
+  set attributes(List<api.Attribute> value) {
     attributes.clear();
     value.forEach(addAttribute);
   }
@@ -68,7 +67,7 @@ class LogRecordData extends api.LogRecord {
       this.instrumentationScope);
 
   LogRecordData.from(sdk.Resource resource,
-      sdk.InstrumentationScope instrumentationScope, LogRecord logRecord)
+      sdk.InstrumentationScope instrumentationScope, api.LogRecord logRecord)
       : this(
             logRecord.timestamp,
             logRecord.observedTimestamp,
@@ -102,7 +101,7 @@ class LogRecordData extends api.LogRecord {
   }
 
   @override
-  void addAttribute(Attribute attr) {
+  void addAttribute(api.Attribute attr) {
     if (limits.attributeCountLimit != -1 && attributes.length >= limits.attributeCountLimit) {
       _droppedAttributes++;
       return;

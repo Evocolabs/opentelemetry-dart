@@ -1,7 +1,7 @@
-import 'package:opentelemetry/src/sdk/logs/data/log_record_data.dart';
+import 'package:opentelemetry/src/experimental_sdk.dart' as sdk;
 
 abstract class LogRecordExporter {
-  void export(List<LogRecordData> records);
+  void export(List<sdk.LogRecordData> records);
 
   void forceFlush();
 
