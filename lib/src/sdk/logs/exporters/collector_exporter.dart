@@ -12,15 +12,24 @@ import '../../proto/opentelemetry/proto/resource/v1/resource.pb.dart'
     as pb_resource;
 import '../../proto/opentelemetry/proto/logs/v1/logs.pb.dart' as pb_logs;
 
+Uri _appendPathIfNeed(Uri origin, String path) {
+  if (!origin.path.endsWith(path)) {
+    final slashOrNot = origin.path.endsWith('/') ? '' : '/';
+    return origin..replace(path: '${origin.path}$slashOrNot$path');
+  }
+  return origin;
+}
+
 class CollectorExporter implements LogRecordExporter {
+  static final _PATH = 'v1/logs';
   final Uri uri;
   final http.Client client;
   final Map<String, String> headers;
   var _shutdown = false;
 
-  CollectorExporter(this.uri,
-      {http.Client? httpClient, this.headers = const {}})
-      : client = httpClient ?? http.Client();
+  CollectorExporter(uri, {http.Client? httpClient, this.headers = const {}})
+      : client = httpClient ?? http.Client(),
+        uri = _appendPathIfNeed(uri, _PATH);
 
   @override
   void export(List<LogRecordData> logRecordData) {
@@ -38,19 +47,20 @@ class CollectorExporter implements LogRecordExporter {
     final headers = {'Content-Type': 'application/x-protobuf'}
       ..addAll(this.headers);
 
-    client.post(uri, body: body.writeToBuffer(), headers: headers).then((value) => print(value.statusCode));
+    client
+        .post(uri, body: body.writeToBuffer(), headers: headers)
+        .then((value) => print(value.statusCode));
   }
 
   @override
-  bool forceFlush() {
-    return true;
+  void forceFlush() {
+    return;
   }
 
   @override
-  bool shutDown() {
+  void shutDown() {
     _shutdown = true;
     client.close();
-    return true;
   }
 
   Iterable<pb_logs.ResourceLogs> _logRecordsToProtobuf(
@@ -106,6 +116,7 @@ class CollectorExporter implements LogRecordExporter {
       return pb_common.AnyValue(boolValue: value);
     else if (value is double)
       return pb_common.AnyValue(doubleValue: value);
+    // ignore: avoid_double_and_int_checks
     else if (value is int)
       return pb_common.AnyValue(intValue: Int64(value));
     else if (value is List) {
