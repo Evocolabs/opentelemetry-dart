@@ -1,3 +1,4 @@
+import 'package:logging/logging.dart';
 import 'package:opentelemetry/api.dart' as api;
 import 'package:opentelemetry/src/experimental_api.dart' as api;
 import 'package:opentelemetry/sdk.dart' as sdk;
@@ -11,6 +12,7 @@ class LoggerProvider implements api.LoggerProvider {
   final sdk.Resource _resource;
   bool _shutdown = false;
   int _timeout;
+  final Logger _logger = Logger('LoggerProvider');
 
   static const api.NoopLogger _noopLogger = api.NoopLogger();
 
@@ -35,35 +37,32 @@ class LoggerProvider implements api.LoggerProvider {
     _logRecordProcessors.add(logRecordProcessor);
   }
 
-  bool shutDown() {
+  void shutDown() {
     if (_shutdown) {
-      return false;
+      return;
     }
     try {
       for (final processor in _logRecordProcessors) {
         processor.shutDown();
       }
     } catch (e) {
-      return false;
+      _logger.warning('Error while shutting down log record processors: $e');
     }
 
     _shutdown = true;
-    return true;
   }
 
-  bool forceFlush() {
+  void forceFlush() {
     if (_shutdown) {
-      return false;
+      return;
     }
     try {
       for (final processor in _logRecordProcessors) {
         processor.forceFlush();
       }
     } catch (e) {
-      return false;
+      _logger.warning('Error while flushing log record processors: $e');
     }
-
-    return true;
   }
 
   // get a [Logger] identified by a name and an optional version and schemaUrl
