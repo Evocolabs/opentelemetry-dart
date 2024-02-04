@@ -15,16 +15,15 @@ class ConsoleExporter implements LogRecordExporter {
   }
 
   @override
-  bool forceFlush() {
-    return true;
+  void forceFlush() {
+    return;
   }
 
   @override
-  bool shutDown() {
-    if (_shutdown) return false;
+  void shutDown() {
+    if (_shutdown) return;
     forceFlush();
     _shutdown = true;
-    return true;
   }
 
 }

@@ -16,7 +16,7 @@ class BatchLogRecordProcessor implements LogRecordProcessor {
   static const int _DEFAULT_SCHEDULED_DELAY_MILLIS = 1000;
   static const int _DEFAULT_EXPORT_TIMEOUT_MILLIS = 30000;
 
-  final Logger _log = Logger('opentelemetry.BatchLogRecordProcessor');
+  final Logger _logger = Logger('opentelemetry.BatchLogRecordProcessor');
 
   final LogRecordExporter _exporter;
   final int _maxQueueSize;
@@ -42,12 +42,12 @@ class BatchLogRecordProcessor implements LogRecordProcessor {
   }
 
   @override
-  bool forceFlush() {
-    if (_shutdown) return false;
+  void forceFlush() {
+    if (_shutdown) return;
     while (_logRecordBuffer.isNotEmpty) {
       _exportBatch(_timer);
     }
-    return _exporter.forceFlush();
+    _exporter.forceFlush();
   }
 
   @override
@@ -58,7 +58,7 @@ class BatchLogRecordProcessor implements LogRecordProcessor {
 
   void _addToBuffer(ReadWriteLogRecord record) {
     if (_logRecordBuffer.length >= _maxQueueSize) {
-      _log.warning(
+      _logger.warning(
           'Dropping log. Exceeded maximum queue size of $_maxQueueSize');
       return;
     }
@@ -76,11 +76,15 @@ class BatchLogRecordProcessor implements LogRecordProcessor {
   }
 
   @override
-  bool shutDown() {
-    if (_shutdown) return false;
-    forceFlush();
+  void shutDown() {
+    if (_shutdown) return;
+    try {
+      forceFlush();
+      _timer.cancel();
+    } catch (e) {
+      _logger.warning('Error while shutting down', e);
+    }
     _shutdown = true;
-    _timer.cancel();
-    return _exporter.shutDown();
+    _exporter.shutDown();
   }
 }

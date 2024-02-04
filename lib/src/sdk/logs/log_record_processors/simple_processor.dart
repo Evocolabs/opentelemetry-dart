@@ -5,10 +5,10 @@ import 'package:opentelemetry/src/sdk/logs/log_record_processors/log_record_proc
 import 'package:opentelemetry/src/sdk/logs/data/read_write_log_record.dart';
 
 class SimpleLogRecordProcessor implements LogRecordProcessor {
-  final LogRecordExporter exporter;
+  final LogRecordExporter _exporter;
   bool _shutdown = false;
 
-  SimpleLogRecordProcessor(this.exporter);
+  SimpleLogRecordProcessor(this._exporter);
 
   @override
   void onEmit(ReadWriteLogRecord record, {SpanContext? spanContext}) {
@@ -18,22 +18,19 @@ class SimpleLogRecordProcessor implements LogRecordProcessor {
     if (spanContext != null) {
       record.spanContext = spanContext;
     }
-    exporter.export([
-      ReadableLogRecord.convert(record)
-    ]);
+    _exporter.export([ReadableLogRecord.convert(record)]);
   }
 
   @override
-  bool forceFlush() {
-    return true;
+  void forceFlush() {
+    _exporter.forceFlush();
   }
 
   @override
-  bool shutDown() {
-    if (_shutdown) return false;
+  void shutDown() {
+    if (_shutdown) return;
     forceFlush();
-    if (!exporter.shutDown()) return false;
+    _exporter.shutDown();
     _shutdown = true;
-    return true;
   }
 }
