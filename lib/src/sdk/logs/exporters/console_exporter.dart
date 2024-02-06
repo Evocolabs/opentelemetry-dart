@@ -1,4 +1,3 @@
-import 'package:opentelemetry/src/experimental_api.dart' as api;
 import 'package:opentelemetry/src/experimental_sdk.dart' as sdk;
 
 class ConsoleExporter implements sdk.LogRecordExporter {
